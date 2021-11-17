@@ -46,7 +46,6 @@ def generate_day(year: int, day: int):
         file.write("    if not os.path.exists(input_filename):\n")
         file.write("        raise FileNotFoundError(f\"Couldn't find input file: {input_filename}\")\n")
         file.write(f"    {HEADER}")
-        file.write("    start_time = time.time\n")
         file.write("    # Return value of -1 is used to signal that this isn't implemented.\n")
         file.write("    # Once it is, remove/replace that return (implicitly returning None is fine).\n")
         file.write("    return -1\n\n\n")
