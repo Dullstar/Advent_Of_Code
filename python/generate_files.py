@@ -17,7 +17,10 @@ def generate_run_day():
     with open("run_day.py", "w") as file:
         file.write(HEADER)
         file.write("def run_day(year: int, day: int):\n")
-        file.write('    filename = f"../inputs/{year}/day{day:02d}.txt"')
+        file.write('    filename = f"../inputs/{year}/day{day:02d}.txt"\n')
+        file.write('    # We could eliminate this if/elif branch with eval, but then we have to import\n')
+        file.write('    # every day, even if we don\'t run them all. Since there\'s a lot of them,\n')
+        file.write('    # we\'d still definitely want to generate the code to import them all.\n')
         for year in range(MIN_YEAR, MAX_YEAR + 1):
             file.write(f"    {'if' if year == MIN_YEAR else 'elif'} year == {year}:\n")
             for day in range(1, 26):
@@ -47,15 +50,12 @@ def generate_day(year: int, day: int):
         file.write("    return -1\n\n\n")
         file.write(RUN_MAIN_PARTIAL)
         file.write("    import os\n")
-        # This is intended to get the input filenames correct.
-        # But there might be a better way! We could probably use __file__
-        # to set the working directory since realistically that's what we're
-        # trying to do here anyway.
+        file.write('    # Ensure working directory is as expected so we can find the input properly\n')
+        file.write('    os.chdir(os.path.split(__file__)[0])\n')
         file.write(f'    filename = "../../inputs/{year}/day{day:02d}.txt"\n')
-        file.write(f'    if not os.path.exists("../../inputs"):\n')
-        file.write(f'        filename = filename[3:]\n')
-        file.write(f'        if not os.path.exists("../inputs"):\n')
-        file.write(f"            FileNotFoundError(\"Couldn't find inputs directory.\")\n")
+        file.write('    if not os.path.exists(filename):\n')
+        file.write("        raise FileNotFoundError(f\"Couldn't find input file: {filename}\")\n")
+        file.write('    main(filename)\n')
 
 
 def main():
