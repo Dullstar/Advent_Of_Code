@@ -1,3 +1,4 @@
 *.sh
 python/__pycache__
 python/.idea
+/.idea

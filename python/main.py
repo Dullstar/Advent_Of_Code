@@ -1,4 +1,5 @@
 import sys
+import os
 import run_day
 
 MIN_YEAR = 2015
@@ -92,6 +93,8 @@ def main() -> None:
     if len(sys.argv) == 1:
         print_help()
         exit()
+    os.chdir(os.path.split(__file__)[0])
+    # Consider if > 2 would make more sense than == 2 (would also require editting print_help())
     report = True if len(sys.argv) == 2 and sys.argv[1] == "all" else False
     unimplemented = []
     for day in interpret_args():
