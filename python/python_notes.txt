@@ -1,0 +1,3 @@
+Python's nature as an interpreted language with no special entry point function required, there's a main script you can call to launch the desired day(s), or, if you're only looking to run one, you can just run the associated .py file directly.
+
+The year folders for Python scripts are named yearXXXX instead of XXXX (where XXXX is the year), as Python's import system doesn't like when the filename of the .py file to import starts with a number, which isn't a problem with, for example, C/C++'s #include.
