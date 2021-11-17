@@ -94,7 +94,7 @@ def main() -> None:
         print_help()
         exit()
     os.chdir(os.path.split(__file__)[0])
-    # Consider if > 2 would make more sense than == 2 (would also require editting print_help())
+    # Consider if > 2 would make more sense than == 2 (would also require editing print_help())
     report = True if len(sys.argv) == 2 and sys.argv[1] == "all" else False
     unimplemented = []
     for day in interpret_args():
