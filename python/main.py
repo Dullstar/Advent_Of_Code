@@ -12,7 +12,7 @@ class DayToRun:
         self.day = day
 
     def __str__(self):
-        return f"Year {self.year} Day {self.day}"
+        return f"{self.year} Day {self.day}"
 
 
 def generate_all_days_for_year(year: int) -> list[DayToRun]:
@@ -84,12 +84,11 @@ def print_help() -> None:
     print("    i.e. \"python main.py all\"")
     print("If 'all' was the only argument, the file \"report.txt\" will be generated")
     print("detailing which days are not implemented.")
-    print("Otherwise, unimplemented days are reported on stdout as they are encountered.\n")
+    print("Unimplemented days are reported on stdout as they are encountered.\n")
     print("Note: If you only want to run one day, you can run individual day scripts independently.")
 
 
 def main() -> None:
-    print(sys.argv)
     if len(sys.argv) == 1:
         print_help()
         exit()
@@ -98,13 +97,13 @@ def main() -> None:
     report = True if len(sys.argv) == 2 and sys.argv[1] == "all" else False
     unimplemented = []
     for day in interpret_args():
-        # print(day)
+        print(day)
         if run_day.run_day(day.year, day.day) == -1:
             if report:
                 unimplemented.append(day)
                 create_unimplemented_report(unimplemented)
-            else:
-                print(f"{day} not implemented yet.")
+            print(f"{day} not implemented yet.")
+        print()
 
 
 # Currently, this allows importing only because there's constants
