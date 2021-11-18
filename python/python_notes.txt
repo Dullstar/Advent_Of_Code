@@ -1,3 +1,5 @@
-Python's nature as an interpreted language with no special entry point function required, there's a main script you can call to launch the desired day(s), or, if you're only looking to run one, you can just run the associated .py file directly.
+Due to Python's nature as an interpreted language with no special entry point function required, there's a main script you can call to launch the desired day(s), or, if you're only looking to run one, you can just run the associated .py file directly.
+
+report.txt is included for convenience, since it's useful for checking which days still need to be generated. But the one in the repository is not guaranteed to be up-to-date. Regenerate it (python main.py -all) if you need an up-to-date one.
 
 The year folders for Python scripts are named yearXXXX instead of XXXX (where XXXX is the year), as Python's import system doesn't like when the filename of the .py file to import starts with a number, which isn't a problem with, for example, C/C++'s #include.
