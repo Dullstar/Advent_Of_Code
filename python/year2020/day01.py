@@ -15,7 +15,7 @@ def parse_input(filename: str):
 def find_two(numbers: list):
     for a, b in it.combinations(numbers, 2):
         if a + b == 2020:
-            print(f"Found {a} + {b} == 2020; product = {a * b}")
+            print(f"Part 1: Found {a} + {b} == 2020; product = {a * b}")
             return
     print("Failed to find two.")
 
@@ -23,7 +23,7 @@ def find_two(numbers: list):
 def find_three(numbers: list):
     for a, b, c in it.combinations(numbers, 3):
         if a + b + c == 2020:
-            print(f"Found {a} + {b} + {c} == 2020; product = {a * b * c}")
+            print(f"Part 2: Found {a} + {b} + {c} == 2020; product = {a * b * c}")
             return
     print("Failed to find three.")
 

@@ -54,13 +54,13 @@ def main(input_filename: str):
     passing_policy = 0
     for password in passwords:
         passing_policy += password.validate_rule_1()
-    print(f"{passing_policy} passwords passed policy 1.")
+    print(f"Part 1: {passing_policy} passwords passed policy 1.")
 
     part2_start = time.time()
     passing_policy = 0
     for password in passwords:
         passing_policy += password.validate_rule_2()
-    print(f"{passing_policy} passwords passed policy 2.")
+    print(f"Part 2: {passing_policy} passwords passed policy 2.")
 
     end_time = time.time()
     print("Elapsed Time:")
