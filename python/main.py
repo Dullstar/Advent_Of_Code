@@ -1,6 +1,7 @@
 import sys
 import os
 import run_day
+import logging
 
 MIN_YEAR = 2015
 MAX_YEAR = 2020
@@ -89,6 +90,8 @@ def print_help() -> None:
 
 
 def main() -> None:
+    # Ultimately it's often convenient to run these from Pycharm and it doesn't play nice with stderr.
+    logging.basicConfig(stream=sys.stdout, format='%(message)s')
     if len(sys.argv) == 1:
         print_help()
         exit()
@@ -96,14 +99,26 @@ def main() -> None:
     # Consider if > 2 would make more sense than == 2 (would also require editing print_help())
     report = True if len(sys.argv) == 2 and sys.argv[1] == "all" else False
     unimplemented = []
+    failed = []
     for day in interpret_args():
         print(day)
-        if run_day.run_day(day.year, day.day) == -1:
-            if report:
-                unimplemented.append(day)
-                create_unimplemented_report(unimplemented)
-            print(f"{day} not implemented yet.")
+        try:
+            if run_day.run_day(day.year, day.day) == -1:
+                if report:
+                    unimplemented.append(day)
+                    create_unimplemented_report(unimplemented)
+                print(f"{day} not implemented yet.")
+        except BaseException as err:
+            print(f"An error was encountered running {day}")
+            logging.exception(err)
+            failed.append(day)
+
         print()
+
+    if len(failed) > 0:
+        print("The following days encounterd errors:")
+        for failure in failed:
+            print("    ", failure)
 
 
 # Currently, this allows importing only because there's constants
