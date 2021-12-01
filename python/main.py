@@ -4,7 +4,7 @@ import run_day
 import logging
 
 MIN_YEAR = 2015
-MAX_YEAR = 2020
+MAX_YEAR = 2021
 
 
 class DayToRun:
