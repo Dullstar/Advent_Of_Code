@@ -41,7 +41,6 @@ def main(input_filename: str):
     print(f"    Part 1: {(part2_start - part1_start) * 1000:.2f} ms")
     print(f"    Part 2: {(end_time - part2_start) * 1000:.2f} ms")
     print(f"    Total: {(end_time - start_time) * 1000:.2f} ms")
-    return -1
 
 
 if __name__ == "__main__":
