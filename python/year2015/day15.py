@@ -11,8 +11,5 @@ def main(input_filename: str):
 
 
 if __name__ == "__main__":
-    def run_main():
-        os.chdir(os.path.split(__file__)[0])
-        main("../../inputs/2015/day15.txt")
-
-    run_main()
+    os.chdir(os.path.split(__file__)[0])
+    main("../../inputs/2015/day15.txt")
