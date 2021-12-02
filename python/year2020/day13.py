@@ -58,9 +58,6 @@ def narrow_down_candidates(bus: Bus, start_val: int, increment: int):
 
 
 def main(input_filename: str):
-    if not os.path.exists(input_filename):
-        raise FileNotFoundError(f"Couldn't find input file: {input_filename}")
-
     timestamp, bus_ids = parse_input(input_filename)
     find_earliest_departure_time(timestamp, bus_ids)
     id_problem(bus_ids)
@@ -69,7 +66,6 @@ def main(input_filename: str):
 if __name__ == "__main__":
     def run_main():
         os.chdir(os.path.split(__file__)[0])
-        filename = "../../inputs/2020/day13.txt"
-        main(filename)
+        main("../../inputs/2020/day13.txt")
 
     run_main()

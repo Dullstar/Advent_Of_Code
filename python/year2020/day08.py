@@ -108,9 +108,6 @@ def correct_code(code: list):
 
 
 def main(input_filename: str):
-    if not os.path.exists(input_filename):
-        raise FileNotFoundError(f"Couldn't find input file: {input_filename}")
-
     # The output on this might get reworked later. It made sense in the original standalone version, but now it's
     # a bit inconsistent with the others, particularly for adding part 1 and part 2 labels.
     start_time = time.time()
@@ -133,7 +130,6 @@ def main(input_filename: str):
 if __name__ == "__main__":
     def run_main():
         os.chdir(os.path.split(__file__)[0])
-        filename = "../../inputs/2020/day08.txt"
-        main(filename)
+        main("../../inputs/2020/day08.txt")
 
     run_main()
