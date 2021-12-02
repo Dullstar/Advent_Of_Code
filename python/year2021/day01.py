@@ -4,8 +4,7 @@ import os
 
 def parse_input(filename: str) -> list[int]:
     with open(filename, "r") as file:
-        nums = [int(line) for line in file]
-    return nums
+        return [int(line) for line in file]
 
 
 def get_depth_increases(readings: list[int]) -> int:
@@ -17,11 +16,7 @@ def get_depth_increases(readings: list[int]) -> int:
 
 
 def sliding_window_increases(readings: list[int]) -> int:
-    total = 0
-    sums = []
-    for i in range(len(readings) - 2):
-        sums.append(readings[i] + readings[i + 1] + readings[i + 2])
-    return get_depth_increases(sums)
+    return get_depth_increases([readings[i] + readings[i + 1] + readings[i + 2] for i in range(len(readings) - 2)])
 
 
 def main(input_filename: str):
