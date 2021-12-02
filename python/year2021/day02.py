@@ -1,11 +1,9 @@
 import time
 import os
+import collections
 
 
-class Instruction:
-    def __init__(self, direction: str, distance: int):
-        self.direction = direction
-        self.distance = distance
+Instruction = collections.namedtuple("Instruction", ["direction", "distance"])
 
 
 class Position:
