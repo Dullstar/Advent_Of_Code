@@ -130,9 +130,6 @@ def validate_entry_values(entry: Entry):
 
 
 def main(input_filename: str):
-    if not os.path.exists(input_filename):
-        raise FileNotFoundError(f"Couldn't find input file: {input_filename}")
-
     start_time = time.time()
     entries = parse_input(input_filename)
     total_entries = len(entries)
@@ -161,7 +158,6 @@ def main(input_filename: str):
 if __name__ == "__main__":
     def run_main():
         os.chdir(os.path.split(__file__)[0])
-        filename = "../../inputs/2020/day04.txt"
-        main(filename)
+        main("../../inputs/2020/day04.txt")
 
     run_main()

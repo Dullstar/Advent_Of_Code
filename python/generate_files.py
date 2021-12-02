@@ -43,8 +43,6 @@ def generate_day(year: int, day: int):
         file.write("import time\n")
         file.write("import os\n\n\n")
         file.write("def main(input_filename: str):\n")
-        file.write("    # if not os.path.exists(input_filename):\n")
-        file.write("    #     raise FileNotFoundError(f\"Couldn't find input file: {input_filename}\")\n")
         file.write(f"    {HEADER}")
         file.write("    # Return value of -1 is used to signal that this isn't implemented.\n")
         file.write("    # Once it is, remove/replace that return (implicitly returning None is fine).\n")
@@ -52,11 +50,10 @@ def generate_day(year: int, day: int):
         file.write('if __name__ == "__main__":\n')
         # We make run_main a function specifically to ensure that filename is constrained to a local scope.
         file.write("    def run_main():\n")
-        # Make sure that the working directory as expected, even if the user called it from somewhere different,
+        # Make sure that the working directory is as expected, even if the user called it from somewhere different,
         # to make sure we're looking for the inputs where they're supposed to be.
         file.write('        os.chdir(os.path.split(__file__)[0])\n')
-        file.write(f'        filename = "../../inputs/{year}/day{day:02d}.txt"\n')
-        file.write('        main(filename)\n\n')
+        file.write('        main("../../inputs/{year}/day{day:02d}.txt")\n\n')
         file.write('    run_main()\n')
 
 
