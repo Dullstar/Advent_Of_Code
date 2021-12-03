@@ -2,3 +2,8 @@
 **/__pycache__
 **/.idea
 **/test_input.txt
+*.sln
+*.vcxproj
+*.filters
+cpp/.vs
+cpp/bin
