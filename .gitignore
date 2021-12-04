@@ -7,3 +7,5 @@
 *.filters
 cpp/.vs
 cpp/bin
+cpp/Advent_Of_Code.vcxproj.user
+cpp/obj
