@@ -68,25 +68,7 @@ class Bingo:
                     break
             if not broke:
                 return True
-
-        # Check diagonals
-        diag1 = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)]
-        diag2 = [(4, 0), (3, 1), (2, 2), (1, 3), (0, 4)]
-        broke = False
-        for pair in diag1:
-            if not self[pair].called:
-                broke = True
-                break
-        if not broke:
-            return True
-
-        for pair in diag2:
-            if not self[pair].called:
-                broke = True
-                break
-        if not broke:
-            return True
-
+        # Diagonals don't need to be checked.
         return False
 
     def score(self, multiplier: int):
