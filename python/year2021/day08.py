@@ -4,10 +4,6 @@ import itertools
 import collections.abc  # honestly, not really needed: it's just here for a type hint.
 import collections  # code runs fine with just collections.abc, but it causes PyCharm warnings in parse_input
 
-# Today's timing attempts to break down part 2 a bit further, but it was shoehorned in later, so it's a bit janky.
-# There's probably some utility out there that can help that I don't know about it (I've heard of something called
-# timeit as well that might be worth looking into)
-# I do plan on removing this timing once I don't think it can be further optimized without a complete rewrite.
 Segment = {
     "a": 0b_0000_0001,
     "b": 0b_0000_0010,
