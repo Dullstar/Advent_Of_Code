@@ -1,7 +1,7 @@
 *.sh
 **/__pycache__
 **/.idea
-**/test_input.txt
+**/test_input*
 *.sln
 *.vcxproj
 *.filters
