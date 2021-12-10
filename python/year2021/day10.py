@@ -1,10 +1,9 @@
 import time
 import os
-import collections
 
 
 def check_line(line: str):
-    stack = collections.deque()
+    stack = []
     opening = {"(": 1, "[": 2, "{": 3, "<": 4}
     closing = {")": ("(", 3), "]": ("[", 57), "}": ("{", 1197), ">": ("<", 25137)}
     for i, char in enumerate(line):
