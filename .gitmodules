@@ -1,0 +1,6 @@
+[submodule "cpp/deps/fmt"]
+	path = cpp/deps/fmt
+	url = https://github.com/fmtlib/fmt
+[submodule "cpp/deps/dstr"]
+	path = cpp/deps/dstr
+	url = https://github.com/Dullstar/Dullstar_Utilities_Lib_Cpp
