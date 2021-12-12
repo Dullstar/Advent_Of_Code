@@ -40,9 +40,9 @@ void print_help()
 	if (!file.is_open()) {
 		std::cout << fmt::format("Couldn't open file: {}\n", filename);
 		std::cout << "Is the working directory correct?\n";
-		std::cout << fmt::format("\tWorking directory: {}", std::filesystem::current_path().u8string());
+		std::cout << fmt::format("\tWorking directory: {}\n", std::filesystem::current_path().u8string());
 	}
-	std::cout << file.rdbuf();
+	std::cout << file.rdbuf() << "\n";
 	exit(EXIT_SUCCESS);
 }
 
@@ -57,12 +57,11 @@ Options interpret_args(int argc, char** argv)
 	return options;
 }
 
-// Should work on Windows. Untested on Linux.
 void find_cpp_base_dir(char* executable_arg)
 {
 	std::cout << "Hello\n";
 	if (!std::filesystem::exists("../inputs")) {
-		auto executable_path = std::filesystem::absolute(executable_arg);
+		auto executable_path = std::filesystem::canonical(std::filesystem::absolute(executable_arg));
 		std::cout << executable_path << "\n";
 		std::cout << executable_path.parent_path().parent_path() << "\n";
 		std::filesystem::current_path(executable_path.parent_path().parent_path());
@@ -77,7 +76,7 @@ int main(int argc, char** argv)
 {
 	if (argc == 1) {
 		std::cout << "Error: missing required command line arguments.\n"
-			<< "\tRun with --help for arguments.";
+			<< "\tRun with --help for arguments.\n";
 		return EXIT_SUCCESS;
 	}
 	std::cout << argv[0] << "\n";
