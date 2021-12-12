@@ -39,7 +39,6 @@ class Cave:
             for node_label in node.connections:
                 neighbor = self.nodes[node_label]
                 if node_label == "end":
-                    # print(current_path + ["end"])
                     total += 1
                 elif (not neighbor.repeatable) and (neighbor.label in current_path):
                     if repeats_used < extra_repeats and neighbor.label != "start":
@@ -61,8 +60,7 @@ def main(input_filename: str):
     part2_start = time.time()
     print(f"Part 2: {cave.count_paths(1)} possible routes")
     end_time = time.time()
-    # 5576
-    # 152837
+
     print("Elapsed Time:")
     print(f"    Parsing: {(part1_start - start_time) * 1000:.2f} ms")
     print(f"    Part 1: {(part2_start - part1_start) * 1000:.2f} ms")
