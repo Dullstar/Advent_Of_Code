@@ -64,6 +64,7 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 		case 25:
 			return run_2015_day_25(filename);
 		}
+		break;
 	case 2016:
 		switch (day) {
 		case 1:
@@ -117,6 +118,7 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 		case 25:
 			return run_2016_day_25(filename);
 		}
+		break;
 	case 2017:
 		switch (day) {
 		case 1:
@@ -170,6 +172,7 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 		case 25:
 			return run_2017_day_25(filename);
 		}
+		break;
 	case 2018:
 		switch (day) {
 		case 1:
@@ -223,6 +226,7 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 		case 25:
 			return run_2018_day_25(filename);
 		}
+		break;
 	case 2019:
 		switch (day) {
 		case 1:
@@ -276,6 +280,7 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 		case 25:
 			return run_2019_day_25(filename);
 		}
+		break;
 	case 2020:
 		switch (day) {
 		case 1:
@@ -329,6 +334,7 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 		case 25:
 			return run_2020_day_25(filename);
 		}
+		break;
 	case 2021:
 		switch (day) {
 		case 1:
@@ -382,6 +388,7 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 		case 25:
 			return run_2021_day_25(filename);
 		}
+		break;
 	}
 	// If the input is properly validated, this will be caught before it reaches this point,
 	// but by including this, if there's a problem with input validation it won't lead to UB.
