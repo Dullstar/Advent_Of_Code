@@ -26,4 +26,5 @@ project "Advent_Of_Code"
 		optimize "Speed"
 
 	filter "toolset:gcc or toolset:clang"  --todo: clang complains about -fmax-errors, but will compile anyway
-		buildoptions {"-Wall", "-Wextra", "-pedantic", "-fmax-errors=5"}
+		-- We want most warnings, but we specifically disable -Wunused-parameter because of how unimplemented days are handled.
+		buildoptions {"-Wall", "-Wextra", "-pedantic", "-fmax-errors=5", "-Wno-unused-parameter"}
