@@ -33,7 +33,7 @@ class Paper:
         x, y = 0, 0
         string = ""
         for item in self.layout:
-            string += ("#" if item else " ")
+            string += ("█" if item else " ")
             x += 1
             if x == self.size_x:
                 string += "\n"
