@@ -48,7 +48,6 @@ class Paper:
 
     def fold(self, fold):
         self.layout = None  # invalidate current layout
-        # print(self.to_string(fold))
         for point in self.points:
             if fold.along_x and fold.value < point.x:
                 point.x = -point.x + (2 * fold.value)
