@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <iostream>
 #include <fmt/format.h>
+#include "days.h"
 
 constexpr int32_t MIN_YEAR = 2015;
 constexpr int32_t MAX_YEAR = 2021;
@@ -51,9 +52,43 @@ Options interpret_args(int argc, char** argv)
 	int32_t year = -1;
 	Options options;
 	for (int i = 1; i < argc; ++i) {
-
+		if (strcmp(argv[i], "all") == 0 || strcmp(argv[i], "-a") == 0 || strcmp(argv[i], "--all") == 0) {
+			if (year == -1) {
+				generate_all_days(options.to_run);
+				options.make_report = true;
+			}
+			else {
+				generate_all_days_for_year(year, options.to_run);
+			}
+		}
+		else if (strcmp(argv[i], "--report") == 0) {
+			// This is a temporary behavior - for now it generates the report by just running --all
+			generate_all_days(options.to_run);
+			options.make_report = true;
+		}
+		else if (strcmp(argv[i], "--help") == 0) {
+			print_help();  // Note that this function also causes the program to exit
+		}
+		else {
+			int32_t arg;
+			try {
+				arg = std::stoi(argv[i]);
+			}
+			catch (const std::exception& e) {
+				std::cerr << fmt::format("Couldn't interpret argument: {}; skipping\n", argv[i]);
+				continue;
+			}
+			if (year != -1 && arg > 0 && arg < 26) {
+				options.to_run.emplace_back(DayToRun{ year, arg });
+			}
+			else if (arg >= MIN_YEAR && arg <= MAX_YEAR) {
+				year = arg;
+			}
+			else {
+				std::cerr << fmt::format("Argument out of range: {}; skipping\n", arg);
+			}
+		}
 	}
-
 	return options;
 }
 
@@ -79,7 +114,9 @@ int main(int argc, char** argv)
 			<< "\tRun with --help for arguments.\n";
 		return EXIT_SUCCESS;
 	}
-	std::cout << argv[0] << "\n";
 	find_cpp_base_dir(argv[0]);
-	print_help();
+	auto options = interpret_args(argc, argv);
+	for (const auto& day : options.to_run) {
+		run_day(day.year, day.day, "../inputs");
+	}
 }
