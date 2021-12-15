@@ -4,7 +4,6 @@ import collections
 
 
 Point = collections.namedtuple("Point", ["x", "y"])
-LowPoint = collections.namedtuple("LowPoint", ["point", "value"])
 
 
 class Map:
