@@ -25,8 +25,6 @@ class Map:
         return (x < 0) or (y < 0) or (x >= self.size_x) or (y >= self.size_y)
 
     def find_path(self):
-        found_path = False
-        path_score = None
         board: list[int or None] = [None] * len(self.layout)
         board[-1] = 0  # The way this is organized, this should be equivalent to working out the index of self.end
         queue: collections.deque[Point] = collections.deque()
@@ -43,16 +41,6 @@ class Map:
                     if (board[neighbor_index] is None) or (board[neighbor_index] > new_value):
                         board[neighbor_index] = new_value
                         queue.append(neighbor)
-
-        '''n = 0
-        string = ""
-        for item in board:
-            string += (f"{item:03} " if item is not None else "--- ")
-            n += 1
-            if n == self.size_x:
-                string += "\n"
-                n = 0
-        return string'''
         return board[0]
 
     def grow(self, grow_x, grow_y):
