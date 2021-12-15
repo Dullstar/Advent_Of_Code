@@ -70,7 +70,7 @@ def interpret_args() -> list[DayToRun]:
                 elif arg in range(MIN_YEAR, MAX_YEAR + 1):
                     current_year = arg
                 else:
-                    raise Exception(f"Argument 'arg' out of range.")
+                    raise Exception(f"Argument {arg} out of range.")
             except ValueError:
                 print(f"Can't interpret argument: {arg}", file=sys.stderr)
     return to_run
