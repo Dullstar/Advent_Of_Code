@@ -2,6 +2,7 @@
 **/__pycache__
 **/.idea
 **/test_input*
+**/debug.txt
 *.sln
 *.vcxproj
 *.filters
