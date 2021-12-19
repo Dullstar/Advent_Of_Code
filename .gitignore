@@ -3,6 +3,7 @@
 **/.idea
 **/test_input*
 **/debug.txt
+**/*part1_layout_result.txt
 *.sln
 *.vcxproj
 *.filters
