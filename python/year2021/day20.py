@@ -43,9 +43,7 @@ class Layout:
     def enhance(self, iterations: int):
         for i in range(iterations):
             self.expand(i)
-            # print(self)
             self.check_pixels(i)
-            # print(self)
         total = 0
         for i in self.points.values():
             total += int(i)
