@@ -159,7 +159,10 @@ def parse_input(filename: str):
             beacon = beacon.split(",")
             beacons.append(Beacon(int(beacon[0]), int(beacon[1]), int(beacon[2])))
         scanners.append(Scanner(beacons))
-    with open("day19_rotations.txt", "r") as file:
+    prefix = ""
+    if not os.path.exists("day19_rotations.txt"):
+        prefix = "year2021/"
+    with open(f"{prefix}day19_rotations.txt", "r") as file:
         for line in file:
             line = line.split(",")
             rotations.append(Point(int(line[0]), int(line[1]), int(line[2])))
@@ -171,7 +174,10 @@ def main(input_filename: str):
     # due to how the launcher currently supplies this argument as well as when the script is run independently.
     # Perhaps a proper setup for calling test inputs could be helpful, but it's not a priority at this time.
     filename = input_filename
-    result_filename = f"{os.path.basename(filename).split('.')[0]}_part1_layout_result.txt"
+    prefix = ""
+    if not os.path.exists("day19_rotations.txt"):
+        prefix = "year2021/"
+    result_filename = f"{prefix}{os.path.basename(filename).split('.')[0]}_part1_layout_result.txt"
     load_result = False
     if os.path.exists(result_filename):
         while True:
@@ -217,12 +223,11 @@ def main(input_filename: str):
         print(f"    Loading Part 1 result: {io_time * 1000:.2f} ms")
     print(f"    Parsing: {parse_time * 1000:.2f} ms")
     print(f"    Part 1: {part1_time * 1000:.2f} ms ", end="")
-    print(f"({part1_time / 60} minutes)")
+    print(f"({part1_time / 60:.2f} minutes)")
     if not load_result:
         print(f"    Saving Part 1 result: {io_time * 1000:.2f} ms")
     print(f"    Part 2: {part2_time * 1000:.2f} ms")
     print(f"    Total: {(parse_time + part1_time + part2_time + io_time) * 1000:.2f} ms")
-    return -1
 
 
 if __name__ == "__main__":
