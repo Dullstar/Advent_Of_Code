@@ -17,9 +17,6 @@ class Layout:
         ]
 
     def expand(self, iteration: int):
-        # We might need to check spaces that are next to a # (1) in the image as well,
-        # so create any that do not exist.
-        # If this ends up being too slow, I do have another idea on how to handle this.
         to_add = set()
         for point, value in self.points.items():
             for location in self.check:
@@ -41,7 +38,6 @@ class Layout:
                     # Edge handling. Assumes all middle values are filled in.
                     bin_string += "0" if (iteration % 2 == 0) or (self.enhancer[0] == "0") else "1"
             next_image[point] = self.enhancer[int(bin_string, 2)]
-            # print(f"Set next_image {point} to enhancer[{int(bin_string, 2)} ({bin_string})] = {next_image[point]}")
         self.points = next_image
 
     def enhance(self, iterations: int):
@@ -63,7 +59,6 @@ class Layout:
         output = ""
         for y in range(min_y, max_y + 1):
             for x in range(min_x, max_x + 1):
-                # output += "#" if (Point(x, y) in self.points and self.points[Point(x, y)] == "1") else "."
                 if (p := Point(x, y)) in self.points:
                     output += "#" if self.points[p] == "1" else "."
                 else:
