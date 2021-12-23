@@ -1,4 +1,4 @@
-Generated Mon Dec 20 23:28:42 2021
+Generated Wed Dec 22 22:06:49 2021
 
 Unimplemented days:
 
@@ -15,4 +15,4 @@ Unimplemented days:
 2020:
     16, 17, 21, 22, 23, 24, 25
 2021:
-    22, 23, 24, 25
+    23, 24, 25
