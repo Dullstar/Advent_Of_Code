@@ -1,7 +1,6 @@
 import time
 import os
 import collections
-import itertools
 import re
 
 
@@ -10,84 +9,25 @@ Instruction = collections.namedtuple("Instruction", ["value", "cube"])
 
 
 class Cube:
-    def __init__(self, corner1, corner2):
+    def __init__(self, corner1: Point, corner2: Point):
         self.c1: Point = corner1
         self.c2: Point = corner2
 
     def __repr__(self):
         return f"Cube: {self.c1.x, self.c1.y, self.c1.z}, {self.c2.x, self.c2.y, self.c2.z};"
 
+    def is_valid(self) -> bool:
+        return (self.c1.x < self.c2.x) and (self.c1.y < self.c2.y) and (self.c1.z < self.c2.z)
+
     @property
-    def area(self):
-        return (self.c2.x - self.c1.x + 1) * (self.c2.y - self.c1.y + 1) * (self.c2.z - self.c1.z + 1)
-
-    def overlap_cube(self, other):
-        # Credit to reddit user u/alykzandr; see run_instructions_pt2 for more details
-        max_c1 = Point(max(self.c1.x, other.c1.x), max(self.c1.y, other.c1.y), max(self.c1.z, other.c1.z))
-        min_c2 = Point(min(self.c2.x, other.c2.x), min(self.c2.y, other.c2.y), min(self.c2.z, other.c2.z))
-        if (min_c2.x - max_c1.x >= 0) and (min_c2.y - max_c1.y >= 0) and (min_c2.z - max_c1.z >= 0):
-            return Cube(max_c1, min_c2)
+    def volume(self):
+        return (self.c2.x - self.c1.x) * (self.c2.y - self.c1.y) * (self.c2.z - self.c1.z)
 
 
-class Core:
-    def __init__(self):
-        self.layout = collections.defaultdict(lambda: False)
-
-    def add_or_remove_cubes(self, instruction: Instruction):
-        for x, y, z in itertools.product(
-                self.make_range(instruction.cube.c1.x, instruction.cube.c2.x),
-                self.make_range(instruction.cube.c1.y, instruction.cube.c2.y),
-                self.make_range(instruction.cube.c1.z, instruction.cube.c2.z)):
-            self.layout[Point(x, y, z)] = instruction.value
-
-    @staticmethod
-    def make_range(value1, value2):
-        # Probably room for improvement
-        if value1 > 50 and value2 > 50:
-            return range(0)
-        if value1 < -50 and value2 < -50:
-            return range(0)
-        if value1 < -50:
-            value1 = -50
-        elif value1 > 50:
-            value1 = 50
-        if value2 < -50:
-            value2 = -50
-        elif value2 > 50:
-            value2 = 50
-        return range(value1, value2 + 1)
-
-    def count_cubes(self):
-        total = 0
-        for point in self.layout:
-            total += self.layout[point]
-        return total
-
-    def run_instructions(self, instructions: list[Instruction]):
-        for i, instruction in enumerate(instructions):
-            # print(f"Running instruction {i + 1} of {len(instructions)}")
-            self.add_or_remove_cubes(instruction)
-        return self.count_cubes()
-
-
-def run_instructions_pt2(instructions: list[Instruction]):
-    # See https://www.reddit.com/r/adventofcode/comments/rmbp88/2021_day_22_how_to_think_about_the_problem/hpmeisa/
-    # (links to https://pastebin.com/13WiZbLk) for the code this is adapted from (i.e. basically just rewritten in
-    # my own style, with no actual changes to how it behaves). Solution credit: reddit user u/alykzandr
-    counted = []
-    lit = 0
-    i = 0
-    for instruction in reversed(instructions):
-        i += 1
-        if instruction.value:
-            overlaps = []
-            for overlap_cube in [cube.overlap_cube(instruction.cube) for cube in counted]:
-                if overlap_cube:
-                    overlaps.append(Instruction(True, overlap_cube))
-            lit += instruction.cube.area
-            lit -= run_instructions_pt2(overlaps)
-        counted.append(instruction.cube)
-    return lit
+def get_overlap(a: Cube, b: Cube) -> Cube or None:
+    overlap = Cube(Point(max(a.c1.x, b.c1.x), max(a.c1.y, b.c1.y), max(a.c1.z, b.c1.z)),
+                   Point(min(a.c2.x, b.c2.x), min(a.c2.y, b.c2.y), min(a.c2.z, b.c2.z)))
+    return overlap if overlap.is_valid() else None
 
 
 def parse_input(filename: str) -> list[Instruction]:
@@ -97,20 +37,59 @@ def parse_input(filename: str) -> list[Instruction]:
         for line in file:
             if match := regex.search(line):
                 value = match[1] == "on"
-                corner1 = Point(int(match[2]), int(match[4]), int(match[6]))
-                corner2 = Point(int(match[3]), int(match[5]), int(match[7]))
-                instructions.append(Instruction(value, Cube(corner1, corner2)))
+                pt1 = Point(int(match[2]), int(match[4]), int(match[6]))
+                pt2 = Point(int(match[3]), int(match[5]), int(match[7]))
+                assert pt1 == Point(min(pt1.x, pt2.x), min(pt1.y, pt2.y), min(pt1.z, pt2.z))
+                assert pt2 == Point(max(pt1.x, pt2.x), max(pt1.y, pt2.y), max(pt1.z, pt2.z))
+                # We add 1 to pt2's coordinates because of the grid system used to define cubes in the input file,
+                # but what we want is the corner. A 1x1x1 cube with the first corner at 10,10,10 has the other corner
+                # at 11,11,11, but we'll have x=10..10,y=10..10,z=10..10, so we have to add one to correct for this.
+                pt2 = Point(pt2.x + 1, pt2.y + 1, pt2.z + 1)
+                cube = Cube(pt1, pt2)
+                instructions.append(Instruction(value, cube))
+            else:
+                # Complain if the assumption regarding the order of inputs is violated so those values aren't just
+                # silently discarded.
+                assert False, f"Error reading line: {line} -- are the coordinates out of order?"
     return instructions
+
+
+def run_instructions_part_1(instructions: list[Instruction]):
+    p1_instructions = []
+    region = Cube(Point(-50, -50, -50), Point(51, 51, 51))
+    for instruction in instructions:
+        if (overlapping := get_overlap(region, instruction.cube)) is not None:
+            p1_instructions.append(Instruction(instruction.value, overlapping))
+    return run_instructions_reverse(p1_instructions)
+
+
+def run_instructions_reverse(instructions: list[Instruction]):
+    def check_overlaps(instructs, current, volume, depth):
+        for instruction in instructs:
+            if instruction.value:
+                overlaps = []
+                for cube in current:
+                    if (overlapping := get_overlap(cube, instruction.cube)) is not None:
+                        overlaps.append(Instruction(True, overlapping))
+                temp = check_overlaps(overlaps, [], 0, depth + 1)
+                dv = instruction.cube.volume - temp
+                volume += dv
+            current.append(instruction.cube)
+        return max(0, volume)
+    return check_overlaps(reversed(instructions), [], 0, 0)
 
 
 def main(input_filename: str):
     start_time = time.time()
     instructions = parse_input(input_filename)
     part1_start = time.time()
-    core = Core()
-    print(f"Part 1: {core.run_instructions(instructions)} lit cubes")
+    print(f"Part 1: {run_instructions_part_1(instructions)} lit cubes")
+    # Proper results:
+    # 607573 for real input
     part2_start = time.time()
-    print(f"Part 2: {run_instructions_pt2(instructions)} lit cubes")
+    print(f"Part 2: {run_instructions_reverse(instructions)} lit cubes")
+    # Proper results:
+    # 1267133912086024 for real input
     end_time = time.time()
     print("Elapsed Time:")
     print(f"    Parsing: {(part1_start - start_time) * 1000:.2f} ms")
