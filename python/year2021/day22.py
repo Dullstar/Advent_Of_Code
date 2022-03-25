@@ -86,7 +86,7 @@ def run_instructions(instructions: list[Instruction]):
     # volume later.
     for instruction in reversed(instructions):
         # We only need to add the volume if the cuboid is ON, i.e. instruction.value == True; otherwise we don't
-        # need to do anything.
+        # need to worry about the volume.
         if instruction.value:
             overlaps = []
             for cuboid in placed:
