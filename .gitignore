@@ -14,3 +14,4 @@ cpp/Advent_Of_Code.vcxproj.user
 cpp/obj
 cpp/Makefile
 
+other/*
