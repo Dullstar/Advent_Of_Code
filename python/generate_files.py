@@ -53,7 +53,7 @@ def generate_day(year: int, day: int):
         # Make sure that the working directory is as expected, even if the user called it from somewhere different,
         # to make sure we're looking for the inputs where they're supposed to be.
         file.write('        os.chdir(os.path.split(__file__)[0])\n')
-        file.write('        main("../../inputs/{year}/day{day:02d}.txt")\n\n')
+        file.write(f'        main("../../inputs/{year}/day{day:02d}.txt")\n\n')
         file.write('    run_main()\n')
 
 
