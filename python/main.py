@@ -5,7 +5,7 @@ import logging
 import re
 
 MIN_YEAR = 2015
-MAX_YEAR = 2021
+MAX_YEAR = 2022
 
 
 class DayToRun:
