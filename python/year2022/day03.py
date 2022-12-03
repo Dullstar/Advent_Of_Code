@@ -17,11 +17,10 @@ class Rucksack:
         contents2 = []
         for item in contents:
             contents2.append(char_to_priority(item))
-        self.c1 = contents2[0:len(contents)//2]
-        self.c2 = contents2[len(contents)//2:]
-        self.set1 = set(self.c1)
-        self.set2 = set(self.c2)
-        self.set3 = self.set1.union(self.set2)
+        self.compartment1 = set(contents2[0:len(contents) // 2])
+        self.compartment2 = set(contents2[len(contents) // 2:])
+        # Union outputs a set containing all elements appearing in any of the input sets, i.e. combining them.
+        self.full_contents = self.compartment1.union(self.compartment2)
 
 
 def parse_input(filename: str) -> list[Rucksack]:
@@ -35,7 +34,9 @@ def parse_input(filename: str) -> list[Rucksack]:
 def get_compartment_shared_total(sacks: list[Rucksack]) -> int:  # Part 1
     total = 0
     for sack in sacks:
-        for i in sack.set1.intersection(sack.set2):
+        # intersection finds the intersection of the two sets,
+        # that is, it outputs a set containing only what's in both input sets.
+        for i in sack.compartment1.intersection(sack.compartment2):
             total += i
     return total
 
@@ -53,7 +54,7 @@ def get_badge_total(sacks: list[Rucksack]) -> int:  # Part 2
     # Find the badges within each group
     total = 0
     for group in groups:
-        temp = group[0].set3.intersection(group[1].set3, group[2].set3)
+        temp = group[0].full_contents.intersection(group[1].full_contents, group[2].full_contents)
         for i in temp:
             total += i
 
