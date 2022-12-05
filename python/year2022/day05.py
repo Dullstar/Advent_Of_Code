@@ -1,6 +1,5 @@
 import time
 import os
-import re
 from copy import deepcopy
 from collections import namedtuple
 
