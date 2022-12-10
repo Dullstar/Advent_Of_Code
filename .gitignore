@@ -17,3 +17,4 @@ cpp/Makefile
 other/*
 cs/*
 rust/*
+inputs/*
