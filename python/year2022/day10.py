@@ -21,7 +21,6 @@ class CPU:
         self.x = 1
         self.end = False
         self.advance_program_counter()
-        assert self._current_instr_cycle != 0  # should have been updated by advance_program_counter
 
     # TODO: I'm like pretty sure they added a match/case thing to Python at some point that would probably be good here
     # but I think I'm going to complete the solution without it first particularly as the Python installation on this
@@ -30,11 +29,8 @@ class CPU:
 
         self.cycle += 1
         self._current_instr_cycle -= 1
-        assert self._current_instr_cycle >= 0, f"Problem at cycle: {self.cycle}"
-        # print(f"instruction cycle: {self.instructions[self.program_counter]}: {self._current_instr_cycle}")
         if (instr := self.instructions[self.program_counter]).opcode == Opcode.addx and self._current_instr_cycle == 0:
             self.x += instr.val
-            # print(f"x += {instr.val} -> x = {self.x}")
         if self._current_instr_cycle == 0:
             self.advance_program_counter()
 
@@ -50,8 +46,6 @@ class CPU:
             self._current_instr_cycle = 1
         elif instr.opcode == Opcode.addx:
             self._current_instr_cycle = 2
-        else:
-            assert False, f"wut? {instr}"
 
     def run_program(self):
         samples = []
@@ -74,7 +68,6 @@ def parse_input(filename: str):
         for line in file:
             line = line.strip().split()
             instructions.append(Instruction(Opcode[line[0]], int(line[1]) if len(line) == 2 else None))
-    # print(instructions)
     return CPU(instructions)
 
 
