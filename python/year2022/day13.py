@@ -54,7 +54,8 @@ def find_decoder_key_components(packets: list):
     for packet in packets:
         if packet_pair_cmp(Pair(packet, [[2]])) == -1:
             n1 += 1
-        if packet_pair_cmp(Pair(packet, [[6]])) == -1:
+            n2 += 1
+        elif packet_pair_cmp(Pair(packet, [[6]])) == -1:
             n2 += 1
     return n1, n2
 
