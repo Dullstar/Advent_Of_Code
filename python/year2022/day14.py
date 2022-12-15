@@ -1,7 +1,7 @@
 import time
 import os
 import enum
-import collections
+import queue
 
 
 class Point:
@@ -78,7 +78,24 @@ class Layout:
                 return False
             if not moved:
                 self[sand] = Tile.Sand
+                if sand == spawner:
+                    return False
                 return True
+
+    def drop_sand_2(self, spawner: Point):
+        q = queue.SimpleQueue()
+        q.put(spawner)
+
+        sand_units = 0
+        self[spawner] = Tile.Sand
+        while not q.empty():
+            sand = q.get()
+            sand_units += 1
+            for direction in sand_movement_priorities:
+                if self[(new_sand := sand + direction)] == Tile.Empty:
+                    self[new_sand] = Tile.Sand
+                    q.put(new_sand)
+        return sand_units
 
     def fill(self, spawner: Point):
         sand_pieces = 0
@@ -87,76 +104,9 @@ class Layout:
         return sand_pieces
 
 
-# Used for Part 2. It has the problem of being quite slow, unfortunately. I browsed the megathread for some potential
-# improvements and I'm noting down some I'd like to look into:
-#     We don't actually need an infinite layout: We should be able to figure out the size of the worst case scenario
-#     and simply preallocate the required amount of space!
-#
-#     We could fill the entire arena and then remove sand from spots where it can't reach. If we can determine those
-#     locations faster than we can simulate each grain, it might just work.
-class InfiniteLayout:
-    def __init__(self, tiles, max_y):
-        self.tiles = collections.defaultdict(lambda: Tile.Empty)
-        for tile in tiles:
-            self.tiles[tile] = Tile.Tile
-        self.infinite_floor_y = max_y + 1
-
-    def __getitem__(self, pt):
-        return self.tiles[pt] if pt.y != self.infinite_floor_y else Tile.Tile
-
-    def __repr__(self):
-        output = ""
-        min_x = min(self.tiles.keys(), key=lambda n: n.x).x
-        max_x = max(self.tiles.keys(), key=lambda n: n.x).x
-        for y in range(0, self.infinite_floor_y + 1):
-            for x in range(min_x, max_x + 1):
-                tile = self[Point(x, y)]
-                match tile:
-                    case Tile.Tile:
-                        output += "#"
-                    case Tile.Empty:
-                        output += "."
-                    case Tile.Sand:
-                        output += "o"
-            output += "\n"
-        return output
-
-    def drop_sand(self, spawner: Point):
-        sand = spawner
-
-        def try_move(sand_pos: Point):
-            for direction in sand_movement_priorities:
-                new_sand = sand_pos + direction
-                if self[new_sand] == Tile.Empty:
-                    return True, new_sand
-            return False, sand_pos
-
-        while True:
-            moved, sand = try_move(sand)
-            if sand is None:
-                assert False
-            if not moved:
-                self.tiles[sand] = Tile.Sand
-                if sand == spawner:
-                    return False
-                return True
-
-    def fill(self, spawner: Point):
-        sand_pieces = 0
-        if self[spawner] == Tile.Tile:
-            print("Honestly, I didn't think this case was possible, but 0 should be the right answer for it.")
-            return 0
-        while True:
-            sand_pieces += 1
-            if not self.drop_sand(spawner):
-                break
-        return sand_pieces
-
-
-# Parse input returns got a bit messy after Part 2. It may be possible to clean up Part 1 to reuse the data structure.
-# But I'm not sure I want to do it that way; it likely won't perform as well.
 def parse_input(filename: str):
     tiles = set()
+    padding = 2
 
     def fill_tiles(first: Point, second: Point):
         assert (first.x == second.x) ^ (first.y == second.y)
@@ -183,12 +133,21 @@ def parse_input(filename: str):
     min_x = min(tiles, key=lambda n: n.x).x
     size_x = max_x - min_x
     size_y = max_y
+    # The padding should not be required, but it's there as a little defensive buffer against off-by-one errors,
+    # as ruling them out would require creating a test input file for it.
+    half_size_x_pt2 = max_y + padding  # worst case pile base: (2 * pile height) - 1.
+    max_x_pt2 = 500 + half_size_x_pt2
+    min_x_pt2 = 500 - half_size_x_pt2  # doesn't end up negative, but it should handle negative coords okay.
+    size_x_pt2 = max_x_pt2 - min_x_pt2
     layout = Layout(size_x, size_y, [Tile.Empty for _ in range(size_x * size_y)])
+    infinite_layout = Layout(size_x_pt2, size_y + 2, [Tile.Empty for _ in range(size_x_pt2 * (size_y + 2))])
     for tile in tiles:
         layout[tile + Point(-min_x, 0)] = Tile.Tile
+        infinite_layout[tile + Point(-min_x_pt2, 0)] = Tile.Tile
+    for x in range(infinite_layout.size_x):
+        infinite_layout[Point(x, max_y + 1)] = Tile.Tile
     sand_spawner = Point(500 - min_x, 0)
-    infinite_spawner = Point(500, 0)
-    infinite_layout = InfiniteLayout(tiles, max_y)
+    infinite_spawner = Point(500 - min_x_pt2, 0)
     return layout, sand_spawner, infinite_layout, infinite_spawner
 
 
@@ -200,7 +159,7 @@ def main(input_filename: str):
     print(f"Part 1: {p1} sand units dispensed")
     part2_start = time.time()
     print("Part 2: ", end="")
-    p2 = infinite_cave.fill(infinite_spawner)
+    p2 = infinite_cave.drop_sand_2(infinite_spawner)
     print(f"{p2} sand units dispensed")
     end_time = time.time()
 
