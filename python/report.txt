@@ -1,4 +1,4 @@
-Generated Sun Dec 18 03:07:57 2022
+Generated Tue Dec 20 02:55:06 2022
 
 Unimplemented days:
 
@@ -17,4 +17,4 @@ Unimplemented days:
 2021:
     24, 25
 2022:
-    16, 17, 19, 20, 21, 22, 23, 24, 25
+    16, 17, 19
