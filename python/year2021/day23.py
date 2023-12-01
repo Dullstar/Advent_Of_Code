@@ -26,6 +26,9 @@ ROOMS_ID = {3: Tile.A, 5: Tile.B, 7: Tile.C, 9: Tile.D}
 ROOMS_X_FROM_TYPE = {Tile.A: 3, Tile.B: 5, Tile.C: 7, Tile.D: 9}
 TYPES = [Tile.A, Tile.B, Tile.C, Tile.D]
 
+OCC_TILES_1 = [14, 15, 17, 19, 21, 23, 24, 29, 31, 33, 35, 42, 44, 46, 48]
+OCC_TILES_2 = [14, 15, 17, 19, 21, 23, 24, 29, 31, 33, 35, 42, 44, 46, 48, 55, 57, 59, 61, 68, 70, 72, 74]
+
 
 class Layout:
     # Parts for assembling the layout
@@ -79,7 +82,7 @@ class Layout:
         init_objects()
         self.get_locked_amphipods()
         self.min_costs = dict()
-        self.fill_minimum_costs_dict()
+        # self.fill_minimum_costs_dict()
 
     def __repr__(self):
         x = 0
@@ -98,6 +101,22 @@ class Layout:
                 output += "\n"
         output += "\n"
         return output
+
+    def to_string(self, reftiles):
+        string = ""
+        for i in reftiles:
+            match self.objects[i]:
+                case Tile.EMPTY:
+                    string += "."
+                case Tile.A:
+                    string += "A"
+                case Tile.B:
+                    string += "B"
+                case Tile.C:
+                    string += "C"
+                case Tile.D:
+                    string += "D"
+        return string
 
     def get_point(self, index: int):
         x = index % self.size_x
@@ -232,8 +251,10 @@ class Layout:
             if costs[i] != 0:
                 moves.add(Move(amphipod, self.get_point(i), costs[i]))
         return moves, False
-
+    '''
     def get_minimum_fuel_requirements(self):
+        assert False
+
         total = 0
         locked = collections.Counter()
         for amphipod in self.amphipods:
@@ -245,12 +266,18 @@ class Layout:
         # how the fuck do I account for diff destinations and shit
 
     def fill_minimum_costs_dict(self):
+        assert False, "Disabled due to bad access."
+
         def get_costs(destination: Point, cost: int):
             costs = []
             pt_queue = [destination]
             while len(pt_queue) > 0:
                 ref_pt = pt_queue.pop(0)
-                current_cost = costs[self.pt_index(ref_pt)] + cost
+                try:
+                    current_cost = costs[self.pt_index(ref_pt)] + cost
+                except:
+                    print(f"Tried bad access: pt_index({ref_pt})={self.pt_index(ref_pt)}, max {len(costs) - 1}")
+                    raise
                 for neighbor in Layout.ADJACENT:
                     pt = Point(neighbor.x + ref_pt.x, neighbor.y + ref_pt.y)
                     pt_index = self.pt_index(pt)
@@ -262,6 +289,7 @@ class Layout:
         dest_y = 3 if self.size_y == 5 else 5
         for atype in TYPES:
             self.min_costs[atype] = get_costs(Point(ROOMS_X_FROM_TYPE[atype], dest_y), atype.value)
+    '''
 
     def move(self, move: Move):
         # Note that this does not *validate* the move, at least not much
@@ -270,13 +298,23 @@ class Layout:
         self.objects[self.pt_index(move.end_pos)] = self.objects[start_index]
         self.objects[start_index] = Tile.EMPTY
         new_amphipod = Amphipod(move.end_pos, move.amphipod.type, False)
-        self.amphipods.remove(move.amphipod)
+        try:
+            self.amphipods.remove(move.amphipod)
+        except KeyError:
+            print("WE HAVE A PROBLEM")
+            print("Key missing: ", move.amphipod)
+            for item in self.amphipods:
+                print(item)
+            print()
+            print(move)
+            print(self)
+            raise
         self.amphipods.add(new_amphipod)
         self.update_amphipod_locked(new_amphipod)
         assert self.objects[self.pt_index(new_amphipod.pos)] == new_amphipod.type
 
 
-class BFS:
+'''class BFS:
     score = None  # ugly hack put in later
 
     def __init__(self, layout: Layout, usage: int = 0, parent=None, d=1):
@@ -365,43 +403,88 @@ class BFS:
     def report_chain(self):
         print(self.layout)
         if self.parent is not None:
-            self.parent.report_chain()
+            self.parent.report_chain()'''
+
+
+class MoveCacheEntry:
+    def __init__(self, moves, score):
+        self.moves = moves
+        self.best = score
+
+
+moves_cache = dict()
+wins_cache = dict()
 
 
 class DFS:
     score = None
 
-    def __init__(self, layout: Layout, usage = 0):
+    def __init__(self, layout: Layout, usage, layouts=None, pt=1):
         self.layout = layout
         self.usage = usage
+        self.layout_str = self.layout.to_string(OCC_TILES_1 if pt==1 else OCC_TILES_2)
+        self.pt = pt
+        if layouts is None:
+            self.layouts = [(self.layout_str, usage)]
+        else:
+            self.layouts = layouts.copy()
+            self.layouts.append((self.layout_str, usage))
+        assert self.layouts is not None
 
     def search(self, depth=0):
+        if self.layout_str in wins_cache:
+            res = wins_cache[self.layout_str]
+            if not res:
+                # print("Cached dead end detected.")
+                return DFS.score
+            elif res <= self.usage:
+                return DFS.score
+            else:  # res > self.usage
+                print("Redoing: potentially better")
         if self.layout.win:
             print(f"Found winning configuration with usage: {self.usage} in {depth} moves")
             DFS.score = min(self.usage, DFS.score) if DFS.score is not None else self.usage
+            for l_str in self.layouts:
+                if l_str[0] not in wins_cache:
+                    wins_cache[l_str[0]] = l_str[1]
+                elif wins_cache[l_str[0]] > self.usage:
+                    wins_cache[l_str[0]] = l_str[1]
+            # wins_cache[self.layout_str] = self.usage
         moves = self.get_all_moves()
         if len(moves) > 0:
             for move in sorted(moves, key=lambda x: x.cost):
                 # if DFS.score is None or DFS.score > self.usage + move.cost:
                 if DFS.score is not None and DFS.score < self.usage + move.cost:
-                    print(f"Tossed at {self.usage + move.cost} due to excessive fuel usage.")
+                    # print(f"Tossed at {self.usage + move.cost} due to excessive fuel usage.")
                     break
                 new_layout = copy.deepcopy(self.layout)
                 new_layout.move(move)
-                DFS(new_layout, self.usage + move.cost).search(depth + 1)
-        # else:
+                DFS(new_layout, self.usage + move.cost, self.layouts, self.pt).search(depth + 1)
+        else:
             # print(f"Dead end hit at usage: {self.usage}, depth {depth}")
+            for l_str in self.layouts:
+                wins_cache.setdefault(l_str[0], False)
+            # wins_cache[self.layout_str] = False
         return DFS.score
 
     def get_all_moves(self):
+        if self.layout_str in moves_cache:
+            # print("Retrieved from cache: ", moves_cache[self.layout_str])
+            mv = moves_cache[self.layout_str]
+            if mv.best > self.usage:
+                moves_cache[self.layout_str] = MoveCacheEntry(mv.moves, self.usage)
+                return mv.moves
+            return set()
         moves = set()
         for amphipod in self.layout.amphipods:
             amph_moves, go_to_room = self.layout.generate_moves(amphipod)
             # If an amphipod is able to go to its proper room, there is no reason not to just go ahead and do it.
             if go_to_room:
+                moves_cache[self.layout_str] = MoveCacheEntry(amph_moves, self.usage)
                 return amph_moves
             moves = moves.union(amph_moves)
         # print(f"get_all_moves: {len(moves)}: {moves}")
+        moves_cache[self.layout_str] = MoveCacheEntry(moves, self.usage)
         return moves
 
 
@@ -454,18 +537,17 @@ def test():
 
 def main(input_filename: str):
     # Dummy out this very slow day.
-    return -1
     input_string = input_to_string(input_filename)
     print(input_string)
     layout = parse_input(input_string, 1)
     print(layout)
     print("-------------------------")
-    test()
-    '''input_string_2 = construct_part_2_input(input_string)
-    print(input_string_2)
-    print(parse_input(input_string_2, 2))
-    print("-------------------------")'''
-    score = DFS(layout).search()
+    # test()
+    input_string_2 = construct_part_2_input(input_string)
+    # print(input_string_2)
+    layout = parse_input(input_string_2, 2)
+    # print("-------------------------")
+    score = DFS(layout, 0).search()
     print(f"Score: {score}")
     return -1
 

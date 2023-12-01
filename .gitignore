@@ -7,6 +7,11 @@
 *.sln
 *.vcxproj
 *.filters
+*output.txt
+*output2.txt
+
+python/year2022/pt2_stash.txt
+
 cpp/.vs
 cpp/bin
 cpp/bin-debug
@@ -17,5 +22,7 @@ cpp/Makefile
 other/*
 cs/*
 unstable/rust/*
+unstable/*
 inputs/*
 test_inputs/*
+
