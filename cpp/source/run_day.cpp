@@ -39,8 +39,9 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 			return run_2015_day_12(filename);
 		case 13:
 			return run_2015_day_13(filename);
-		case 14:
-			return run_2015_day_14(filename);
+		// Something went horribly wrong with this case and it's confusing the linker.
+		/*case 14:
+		 	return run_2015_day_14(filename);*/
 		case 15:
 			return run_2015_day_15(filename);
 		case 16:
@@ -387,6 +388,13 @@ std::optional<std::chrono::duration<double>> run_day(int32_t year, int32_t day, 
 			return run_2021_day_24(filename);
 		case 25:
 			return run_2021_day_25(filename);
+		}
+		break;
+	case 2022:
+		// I don't preserve the earlier template bits here because they're a problem.
+		switch (day) {
+		case 14:
+			return broken_name(filename);
 		}
 		break;
 	}

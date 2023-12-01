@@ -180,3 +180,6 @@ std::optional<std::chrono::duration<float>> run_2021_day_22(const std::string& f
 std::optional<std::chrono::duration<float>> run_2021_day_23(const std::string& filename);
 std::optional<std::chrono::duration<float>> run_2021_day_24(const std::string& filename);
 std::optional<std::chrono::duration<float>> run_2021_day_25(const std::string& filename);
+
+// Later additions are sparse.
+std::optional<std::chrono::duration<float>> broken_name(const std::string& filename);

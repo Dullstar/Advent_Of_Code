@@ -1,0 +1,8 @@
+I'm probably going to redo this template at some point,
+and all these files may very well get moved/changed/deleted/etc.
+
+The current compile times are really quite problematic and that needs to be addressed.
+
+Also, when I added a day from 2022 it caused a linker error to appear that resolved itself
+when renaming the function despite it following the earlier conventions, and I don't know why.
+Need to try to produce a minimal example that causes it.

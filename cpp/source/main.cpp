@@ -7,7 +7,7 @@
 #include "days.h"
 
 constexpr int32_t MIN_YEAR = 2015;
-constexpr int32_t MAX_YEAR = 2021;
+constexpr int32_t MAX_YEAR = 2022;
 
 struct DayToRun
 {
