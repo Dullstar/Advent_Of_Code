@@ -16,5 +16,6 @@ cpp/Makefile
 
 other/*
 cs/*
-rust/*
+unstable/rust/*
 inputs/*
+test_inputs/*

@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/advent_of_code
+advent_of_code.so
+advent_of_code.dylib
+advent_of_code.dll
+advent_of_code.a
+advent_of_code.lib
+advent_of_code-test-*
+*.exe
+*.o
+*.obj
+*.lst
+input_location.txt

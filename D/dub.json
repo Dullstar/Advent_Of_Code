@@ -1,0 +1,10 @@
+{
+	"authors": [
+		"Dullstar"
+	],
+	"copyright": "Copyright © 2022, Dullstar",
+	"description": "Dullstar's Advent of Code solutions in D",
+	"license": "MIT",
+	"name": "advent_of_code",
+	"preBuildCommands": ["python pre-build.py"]
+}
