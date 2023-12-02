@@ -46,10 +46,6 @@ struct Game
     bool is_possible(int rMax, int gMax, int bMax) const {
         return (rMax >= maxElement(red) && gMax >= maxElement(green) && bMax >= maxElement(blue));
     }
-
-    int opBinary(string op : "+")(int other) {
-        return id + other.id;
-    }
 }
 
 Game[] parse_input()
