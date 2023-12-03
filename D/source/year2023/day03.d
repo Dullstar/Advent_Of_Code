@@ -1,7 +1,6 @@
 module year2023.day03;
 
 import core.time;
-import std.regex;
 import std.stdio;
 import std.string;
 import std.conv;
@@ -41,11 +40,9 @@ struct Number
         sscanf(buf, "%d", &number);
     }
     int number;
-    // int[] x;
     int xMin;
     int xMax;
     int y;
-    // Point!int[] positions;
     Point!int[] get_neighbors(const ref NumberGrid grid) const 
     { 
         return _get_neighbors(xMin, xMax, y, grid); 
@@ -69,7 +66,6 @@ Point!int[] _get_neighbors(int xMin, int xMax, int y, const ref NumberGrid grid)
     }
     add_neighbor(Point!int(xMin - 1, y));
     add_neighbor(Point!int(xMax + 1, y));
-    // writeln(neighbors);
     return neighbors;
 }
 
@@ -133,10 +129,8 @@ int part1(const ref NumberGrid grid)
 {
     int total = 0;
     foreach (num; grid.numbers) {
-        // writefln("Checking %s", num);
         bool found = false;
         foreach (neighbor; num.get_neighbors(grid)) {
-            // writefln("    Neighbor %s", neighbor);
             if (grid.grid[neighbor].type == TileType.Symbol) {
                 found = true;
                 break;
@@ -145,7 +139,6 @@ int part1(const ref NumberGrid grid)
         if (found) total += num.number;
     }
 
-    // assert(grid.grid[Point!int(4, 0)].type == TileType.Empty);
     return total;
 }
 
@@ -183,8 +176,8 @@ bool run_2023_day03()
     auto pt2_solution = part2(grid);
     auto end_time = MonoTime.currTime;
 
-    writefln("Sum of game IDs (part 1): %s", pt1_solution);
-    writefln("Sum of cube set powers (part 2): %s", pt2_solution);
+    writefln("Sum of part numbers (part 1): %s", pt1_solution);
+    writefln("Sum of gear ratios (part 2): %s", pt2_solution);
 
     writeln("Elapsed Time:");
     writefln("    Parsing: %s ms", float((pt1_start - start_time).total!"usecs") / 1000);
