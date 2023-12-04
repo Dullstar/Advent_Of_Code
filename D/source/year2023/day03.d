@@ -185,5 +185,5 @@ bool run_2023_day03()
     writefln("    Part 2: %s ms", float((end_time - pt2_start).total!"usecs") / 1000);
     writefln("    Total: %s ms", float((end_time - start_time).total!"usecs") / 1000);
 
-    return false;
+    return true;
 }
