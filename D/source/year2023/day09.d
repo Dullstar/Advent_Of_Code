@@ -38,8 +38,7 @@ int predict_next_value(const ref int[] sequence) {
         new_sequence ~= sequence[i] - sequence[i - 1];
     }
     assert (new_sequence.length == sequence.length - 1);
-    auto result = predict_next_value(new_sequence);
-    return result + sequence[$-1];
+    return predict_next_value(new_sequence) + sequence[$-1];
 }
 
 int part_1(int[][] OASIS_report) {
