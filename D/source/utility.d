@@ -36,7 +36,9 @@ public:
     {
         layout = layout_;
         size = size_;
-        assert (layout_.length == size_.x * size_.y);
+        assert (layout_.length == size_.x * size_.y, 
+            format("Can't create layout: x=%s * y=%s != %s", size_.x, size_.y, layout_.length)
+        );
     }
 
     T opIndex(S x, S y) const
