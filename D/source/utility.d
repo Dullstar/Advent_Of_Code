@@ -57,6 +57,11 @@ public:
         layout[index_at_pt(pt)] = val;
     }
 
+    void opIndexAssign(T val, S x, S y)
+    {
+        layout[index_at_pt(Point!S(x, y))] = val;
+    }
+
     Point!S pt_at_index(size_t i) const
     // in(i < layout.length, format("Index %d out of bounds! (max: %d)", i, layout.length - 1))
     {
