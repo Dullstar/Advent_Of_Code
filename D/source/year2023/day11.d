@@ -119,8 +119,8 @@ bool run_2023_day11()
     auto pt2_solution = solve(galaxy_grid, 1_000_000 - 1);
     auto end_time = MonoTime.currTime;
 
-    writefln("Sum of extrapolated next values (part 1): %s", pt1_solution);
-    writefln("Sum of extrapolated previous values (part 2): %s", pt2_solution);
+    writefln("Distances (part 1): %s", pt1_solution);
+    writefln("Distances (part 2): %s", pt2_solution);
 
     writeln("Elapsed Time:");
     writefln("    Parsing: %s ms", float((pt1_start - start_time).total!"usecs") / 1000);
