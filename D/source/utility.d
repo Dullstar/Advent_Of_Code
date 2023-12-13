@@ -80,3 +80,25 @@ public:
     Point!S size;
     T[] layout;
 }
+ 
+ version(none)
+ {
+    // This is for copy/pasting when you need a pretty print for debugging,
+    // as for a lot of types to!string doesn't work well.
+    // You'd think we'd be able to make it accept a function for the string conversion,
+    // but there's no examples given for passing functions to a template, particularly when
+    // the type of the functions argument's is itself a template parameter.
+    // I tried like 50 different ways and the compiler found like 51 different ways to say no.
+    // So now it's not even TRYING to be a template and you can just replace the types yourself.
+    void pretty_print(Grid2D!int grid)
+    {
+        writefln("Grid2D: %s by %s", grid.size.x, grid.size.y);
+        foreach (y; 0..grid.size.y) {
+            foreach(x; 0..grid.size.x) {
+                grid[x, y].to!string;
+            }
+            writeln;
+        }
+        return;
+    }
+}
