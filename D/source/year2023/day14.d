@@ -43,65 +43,77 @@ Grid parse_input()
 }
 
 enum Direction { North, South, East, West }
-int simulate_rocks(Direction d)(ref Grid grid)
+void simulate_rocks(Direction d)(ref Grid grid)
 {
     // This looks a bit nasty, but the alternatives were:
     //    -- subfunction with super convoluted arguments that would be difficult to reason about,
     //       especially if it doesn't work on the first try.
     //    -- manually copy/pasting the function 4 times and changing these 3 lines in each one.
-    int total = 0;
     static if (d == Direction.North) {
         enum outer_loop = "foreach(y; 1..grid.size.y)";
         enum inner_loop = "foreach(x; 0..grid.size.x)";
-        enum dest_pt = "x, y - 1";
+        enum call_move_rock = "move_rock!(-1)(source, 0, -grid.size.x);";
     }
     else static if (d == Direction.West) {
         enum outer_loop = "foreach(x; 1..grid.size.x)";
         enum inner_loop = "foreach(y; 0..grid.size.y)";
-        enum dest_pt = "x - 1, y";
+        enum call_move_rock = "move_rock!(-1)(source, y * grid.size.x, -1);";
     }
     else static if (d == Direction.South) {
-        enum outer_loop = "foreach(y; 0..grid.size.y - 1)";
+        enum outer_loop = "for(int y = grid.size.y - 2; y >= 0; --y)";
         enum inner_loop = "foreach(x; 0..grid.size.x)";
-        enum dest_pt = "x, y + 1";
+        enum call_move_rock = "move_rock!(1)(source, grid.layout.length, grid.size.x);";
     }
     else static if (d == Direction.East) {
-        enum outer_loop = "foreach(x; 0..grid.size.x - 1)";
+        enum outer_loop = "for(int x = grid.size.x - 2; x >= 0; --x)";
         enum inner_loop = "foreach(y; 0..grid.size.y)";
-        enum dest_pt = "x + 1, y";
+        enum call_move_rock = "move_rock!(1)(source, (y + 1) * grid.size.x, 1);";
     }
     else static assert (0);
+
+    void move_rock(int sign)(size_t start, size_t stop, int step) 
+    {
+        static if (sign > 0) enum loop = "for(size_t i = start; i < stop; i += step)";
+        else static if (sign < 0) enum loop = "for(int i = start.to!int; i >= stop.to!int; i += step)";
+        else static assert(0);
+        size_t last = start;
+        grid.layout[start] = Tile.Empty;
+        mixin(
+        loop ~ " {
+            if (grid.layout[i] != Tile.Empty) {
+                grid.layout[last] = Tile.Round;
+                return;
+            }
+            last = i;
+        }
+        ");
+        grid.layout[last] = Tile.Round;
+        return;
+    }
 
     mixin(
     outer_loop ~ " {
         " ~ inner_loop ~ " {
             size_t source = grid.index_at_pt(Pt(x, y));
-            if (grid.layout[source] == Tile.Round) {
-                size_t dest = grid.index_at_pt(Pt(" ~ dest_pt ~ "));
-                if (grid.layout[dest] == Tile.Empty) {
-                    grid.layout[source] = Tile.Empty;
-                    grid.layout[dest] = Tile.Round;
-                    total += 1;
-                }
-            }
+            if (grid.layout[source] == Tile.Round) " ~ call_move_rock ~ "
         }
     }");
-    return total;
+    return;
 }
 
 void run_simulation(ref Grid grid)
 {
-    while (simulate_rocks!(Direction.North)(grid)) {}
+    grid.simulate_rocks!(Direction.North);
     return;
 }
 
 // Each run does one cycle.
 void run_simulation_pt2(ref Grid grid)
 {
-    while (grid.simulate_rocks!(Direction.North)) {}
-    while (grid.simulate_rocks!(Direction.West)) {}
-    while (grid.simulate_rocks!(Direction.South)) {}
-    while (grid.simulate_rocks!(Direction.East)) {}
+    grid.simulate_rocks!(Direction.North);
+    grid.simulate_rocks!(Direction.West);
+    grid.simulate_rocks!(Direction.South);
+    grid.simulate_rocks!(Direction.East);
     return;
 }
 
@@ -126,11 +138,10 @@ int part_1(Grid grid)
 int part_2(Grid grid)
 {
     size_t[string] cache;
-    string[size_t] grid_cache;  // probably not the most RAM friendly thing in the world, but it's cheap
+    // string[size_t] grid_cache;  // probably not the most RAM friendly thing in the world, but it's cheap
+    string[] grid_cache;
     // If we wanted to be a bit more stringent with RAM we could just calculate the loads each iteration
     // and then only take the one we need.
-    // int[] sizes;
-    // okay, like no chance this works but let's see how bad we're talking.
     auto runs = 1_000_000_000;
     foreach(i; 0..runs) {
         grid.run_simulation_pt2;
@@ -138,8 +149,7 @@ int part_2(Grid grid)
         size_t* ptr = str in cache;
         if (ptr is null) {
             cache[str] = i;
-            grid_cache[i] = str;
-            // sizes ~= grid.calculate_load;
+            grid_cache ~= str;
         }
         else {
             writefln("We've visited here before: Cycle %s (it is now Cycle %s)", *ptr, i);
@@ -165,7 +175,7 @@ bool run_2023_day14()
 {
     auto start_time = MonoTime.currTime;
     auto grid = parse_input;
-    auto gridpt2 = parse_input;  // awful hack to clone this easily
+    auto gridpt2 = new Grid(grid.size, grid.layout.dup);
     auto pt1_start = MonoTime.currTime;
     auto pt1_solution = part_1(grid);
     auto pt2_start = MonoTime.currTime;
