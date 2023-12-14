@@ -182,8 +182,8 @@ bool run_2023_day14()
     auto pt2_solution = part_2(gridpt2);
     auto end_time = MonoTime.currTime;
 
-    writefln("Result of reflections (part 1): %s", pt1_solution);
-    writefln("Result of flawed reflections (part 2): %s", pt2_solution);
+    writefln("Total load (part 1): %s", pt1_solution);
+    writefln("Total load (part 2): %s", pt2_solution);
 
     writeln("Elapsed Time:");
     writefln("    Parsing: %s ms", float((pt1_start - start_time).total!"usecs") / 1000);
