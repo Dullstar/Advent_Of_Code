@@ -6,9 +6,6 @@
 #include <fmt/format.h>
 #include "days.h"
 
-constexpr int32_t MIN_YEAR = 2015;
-constexpr int32_t MAX_YEAR = 2022;
-
 struct DayToRun
 {
 	int32_t year;
@@ -41,7 +38,7 @@ void print_help()
 	if (!file.is_open()) {
 		std::cout << fmt::format("Couldn't open file: {}\n", filename);
 		std::cout << "Is the working directory correct?\n";
-		std::cout << fmt::format("\tWorking directory: {}\n", std::filesystem::current_path().u8string());
+		std::cout << fmt::format("\tWorking directory: {}\n", std::filesystem::current_path().string());
 	}
 	std::cout << file.rdbuf() << "\n";
 	exit(EXIT_SUCCESS);
@@ -74,7 +71,7 @@ Options interpret_args(int argc, char** argv)
 			try {
 				arg = std::stoi(argv[i]);
 			}
-			catch (const std::exception& e) {
+			catch (const std::exception&) {
 				std::cerr << fmt::format("Couldn't interpret argument: {}; skipping\n", argv[i]);
 				continue;
 			}
@@ -117,6 +114,6 @@ int main(int argc, char** argv)
 	find_cpp_base_dir(argv[0]);
 	auto options = interpret_args(argc, argv);
 	for (const auto& day : options.to_run) {
-		run_day(day.year, day.day, "../inputs");
+		run_day(day.year, day.day, "../test_inputs");
 	}
 }
