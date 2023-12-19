@@ -41,6 +41,9 @@ public:
         );
     }
 
+    // BUG FOUND: These return copies, so you can read from these, but you can't write to them.
+    // Normally this isn't a problem because of opIndexAssign, but if you want to access a mutable T
+    // in order to make a change to it instead of overwriting it with a new one, it will fail.
     T opIndex(S x, S y) const
     // in(x >= 0 && y >= 0 && x < size_x && x < size_y, format("%d, %d out of bounds! (must be between 0, 0 and %d, %d)"))
     {
