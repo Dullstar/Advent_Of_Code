@@ -15,3 +15,4 @@ advent_of_code-test-*
 *.lst
 input_location.txt
 source/year2024/list2024.d
+/.vs
