@@ -6,6 +6,7 @@ import std.stdio;
 import year2021;
 import year2022;
 import year2023;
+import year2024;
 
 const int MAX_YEAR = 2024;
 const int MIN_YEAR = 2015;
@@ -44,6 +45,9 @@ bool run_day(Day day)
 		break;
 	case 2023:
 		res = run_day_2023(day.day);
+		break;
+	case 2024:
+		res = run_day_2024(day.day);
 		break;
     default: break;
     }
