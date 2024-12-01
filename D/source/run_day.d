@@ -7,7 +7,7 @@ import year2021;
 import year2022;
 import year2023;
 
-const int MAX_YEAR = 2023;
+const int MAX_YEAR = 2024;
 const int MIN_YEAR = 2015;
 
 struct Day
