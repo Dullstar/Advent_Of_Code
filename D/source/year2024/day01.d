@@ -58,7 +58,7 @@ int get_similarity_score_simple(ref Lists lists)
 int get_similarity_score_caching(ref Lists lists)
 {
     // Mostly this just demonstrates that count is sufficiently fast for a dataset of this size
-    // for caching the result to potentially end up being slower, at least not using an associative array.
+    // for caching the result to potentially end up being slower, at least when using an associative array.
     int sum = 0;
     auto right = SortedRange!(int[], "a<b", SortedRangeOptions.assumeSorted)(lists.right);
     int[int] counts;
@@ -137,9 +137,10 @@ bool run_2024_day01()
     auto pt2_caching = get_similarity_score_caching(lists);
     auto pt2_compare_t2 = MonoTime.currTime;
 
-    // Arguably assert is better here semantically, but there's no point in outputting the same value 3 times
-    // so the enforce call makes it so the methods not used for printing are still technically being used
-    // and thus can't get optimized out by the compiler and thus interfering with timing comparisons.
+    // Arguably assert is better here semantically, but there's no point in outputting the same value 3 times.
+    // Enforce doesn't get removed in release builds, so calling it means that pt2_simple and pt2_caching
+    // are technically being used, therefore eliminating the function call entirely isn't a valid optimization,
+    // which we care about because if the function is optimized out we can't make accurate comparisons.
     enforce(pt2_solution == pt2_simple && pt2_solution == pt2_caching);
 
     writefln("Total Distance (part 1): %s", pt1_solution);
