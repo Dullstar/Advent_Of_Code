@@ -14,7 +14,23 @@ struct Point(T)
 
     Point opBinary(string op)(in Point other) const if(op == "+" || op == "-")
     {
-        return Point(x + other.x, y + other.y);
+        mixin(format!("return Point(x %s other.x, y %s other.y);")(op, op));
+    }
+
+    Point opBinary(string op: "*")(T scalar)
+    {
+        return Point(scalar * other.x, scalar * other.y);    
+    }
+
+    void opOpAssign(string op)(in Point other) if(op == "+" || op == "-")
+    {
+        mixin(format!("x %s= other.x; y %s= other.y;")(op, op));
+    }
+
+    void opOpAssign(string op: "*")(T scalar)
+    {
+        x *= scalar;
+        y *= scalar;
     }
 
     // Reminder: D has a default for opEquals, so we don't need to do that one.
