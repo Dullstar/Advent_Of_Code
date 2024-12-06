@@ -46,21 +46,29 @@ Input parse_input()
     return _in;
 }
 
-bool is_sequence_correctly_ordered(const ref int[] seq, const ref bool[int][int] deps)
+// Return value >= 0 is the index of the bad entry; return value < 0 means no bad entries.
+int get_first_bad_entry_index(const ref int[] seq, const ref bool[int][int] deps)
 {
-    for (size_t i = 1; i < seq.length; ++i)
+    for (int i = 1; i < seq.length; ++i)
     {
         auto not_allowed = deps.get(seq[i], null);
         if (not_allowed is null) continue;
-        for (size_t j = 0; j < i; ++j)
+        for (int j = 0; j < i; ++j)
         {
             if (not_allowed.get(seq[j], false))
             {
-                return false;
+                return i;
             }
         }
     }
-    return true;
+    return -1;
+}
+
+// Used to be its own function, but the only difference between this and get_first_bad_entry_index was the return value.
+// I kept the signature around to keep Part 1's code a bit more clear than it otherwise would be.
+bool is_sequence_correctly_ordered(const ref int[] seq, const ref bool[int][int] deps)
+{
+    return get_first_bad_entry_index(seq, deps) < 0;
 }
 
 int get_sequence_middle_number(const ref int[] seq)
@@ -89,23 +97,6 @@ in (pt2_helper.length == 0)  // pt2_helper is to be filled in here
     return sum;
 }
 
-int get_first_bad_entry_index(const ref int[] seq, const ref bool[int][int] deps)
-{
-    for (int i = 1; i < seq.length; ++i)
-    {
-        auto not_allowed = deps.get(seq[i], null);
-        if (not_allowed is null) continue;
-        for (int j = 0; j < i; ++j)
-        {
-            if (not_allowed.get(seq[j], false))
-            {
-                return i;
-            }
-        }
-    }
-    return -1;
-}
-
 int fix_sequence(int[] sequence, const ref bool[int][int] deps)
 {
     while (true) {
@@ -119,8 +110,6 @@ int fix_sequence(int[] sequence, const ref bool[int][int] deps)
         }
         return get_sequence_middle_number(sequence);
     }
-    //enforce(0, "Sequence %s is bad, and it should feel bad.");
-    //assert(0);  // makes the compiler happy (enforce renders this unreachable)
 }
 
 int part_2(Input input, bool[] passed)
