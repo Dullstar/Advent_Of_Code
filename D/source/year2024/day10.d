@@ -116,7 +116,6 @@ int part_1(Input inp)
 
 int part_2(Input inp)
 {
-    // 699 too low
     int score = 0;
     foreach (trailhead; inp.trailheads)
     {
