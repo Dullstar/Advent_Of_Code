@@ -142,33 +142,6 @@ int64_t calibrate_pt2(const ref Input inp)
     return 0;
 }
 
-bool try_combination_2(const ref Input inp, int64_t combination)
-{
-    int64_t total = inp.values[0];
-    for (size_t i = 1; i < inp.values.length; ++i)
-    {
-        switch (combination & 3)
-        {
-        case 0:
-            total += inp.values[i];
-            break;
-        case 1:
-            total *= inp.values[i];
-            break;
-        case 2:
-            total = (total.to!string ~ inp.values[i].to!string).to!int64_t;
-            break;
-        case 3:
-            break;
-        default:
-            assert(0);
-        }
-        combination >>= 2;
-        if (total > inp.target) return 0;
-    }
-    return total == inp.target;
-}
-
 // Anything which passed part 1 is guaranteed to pass part 2,
 // so we skip those ones.
 int64_t part_2(Input[] inputs_pt2, int64_t pt1_result)
