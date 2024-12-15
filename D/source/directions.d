@@ -6,6 +6,10 @@ enum Point!int NORTH = Point!int(0, -1);
 enum Point!int EAST = Point!int(1, 0);
 enum Point!int SOUTH = Point!int(0, 1);
 enum Point!int WEST = Point!int(-1, 0);
+enum Point!int NORTHEAST = Point!int(1, -1);
+enum Point!int NORTHWEST = Point!int(-1, -1);
+enum Point!int SOUTHEAST = Point!int(1, 1);
+enum Point!int SOUTHWEST = Point!int(-1, 1);
 
 enum Point!int[4] DIRECTIONS = [NORTH, EAST, SOUTH, WEST];
 // Reserved for later.

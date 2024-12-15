@@ -19,7 +19,7 @@ struct Point(T)
 
     Point opBinary(string op: "*")(T scalar)
     {
-        return Point(scalar * other.x, scalar * other.y);    
+        return Point(x * scalar, y * scalar);    
     }
 
     void opOpAssign(string op)(in Point other) if(op == "+" || op == "-")
