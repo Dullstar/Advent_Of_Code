@@ -12,8 +12,15 @@ import run_day;
 immutable input_location = "input_location.txt";
 immutable test_input_location = "test_input_location.txt";
 
+private bool _is_test = false;
+bool is_test_input()
+{
+    return _is_test;
+}
+
 void init_path(bool use_test_input)
 {
+    _is_test = use_test_input;
     string location = (use_test_input) ? test_input_location : input_location;
     chdir(thisExePath.dirName);
     if (!exists(location))
@@ -63,10 +70,12 @@ string get_input_path(int year, int day)
 // in the same directory as the executable
 string get_test_input()
 {
+    assert(0, "I think this is no longer in use.");
     return readText(get_test_input_path());
 }
 
 string get_test_input_path()
 {
+    assert(0, "I think this is no longer in use.");
     return chainPath(thisExePath(), "test_input.txt").to!string;
 }

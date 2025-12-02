@@ -7,8 +7,9 @@ import year2021;
 import year2022;
 import year2023;
 import year2024;
+import year2025;
 
-const int MAX_YEAR = 2024;
+const int MAX_YEAR = 2025;
 const int MIN_YEAR = 2015;
 
 struct Day
@@ -22,9 +23,19 @@ struct Day
 			auto test = format("Year must be between %d and %d; %d was provided", MIN_YEAR, MAX_YEAR, year);
 			throw new Exception(test);
 		}
-		if (day < 1 || day > 25) 
+		if (year < 2025)
+		{			
+			if (day < 1 || day > 25) 
+			{
+				throw new Exception(format("2015-2024: Day must be between %d and %d; %d was provided", 1, 25, day));
+			}
+		}
+		else
 		{
-			throw new Exception(format("Day must be between %d and %d; %d was provided", 1, 25, day));
+			if (day < 1 || day > 12)
+			{
+				throw new Exception(format("2025-%d: Day must be between %d and %d; %d was provided", MAX_YEAR, 1, 12, day));
+			}
 		}
 	}
 	int year;
@@ -48,6 +59,9 @@ bool run_day(Day day)
 		break;
 	case 2024:
 		res = run_day_2024(day.day);
+		break;
+	case 2025:
+		res = run_day_2025(day.day);
 		break;
     default: break;
     }

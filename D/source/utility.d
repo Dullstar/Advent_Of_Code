@@ -99,8 +99,17 @@ public:
     Point!S size;
     T[] layout;
 }
- 
- version(none)
+
+// Acts similar to % operator, but with handling for negative lhs values to continue wrap-around behavior.
+T wrap(T)(T lhs, T rhs)
+{
+    // Saved attempt at doing this without a loop; appears to wrap properly at first but breaks when abs(lhs) > rhs; need to check abs(lhs)==rhs
+    // if (lhs < 0) lhs = rhs + lhs;  // technically, rhs - abs(lhs), just simplified given lhs < 0
+    while (lhs < 0) lhs += rhs;
+    return lhs % rhs;
+}
+
+version(none)
  {
     // This is for copy/pasting when you need a pretty print for debugging,
     // as for a lot of types to!string doesn't work well.
