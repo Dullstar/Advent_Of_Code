@@ -139,7 +139,7 @@ bool run_2025_day02()
     auto pt2_solution = part_2(input);
     auto end_time = MonoTime.currTime;
     writefln("Invalid ID sum (part 1): %s", pt1_solution);
-    writefln("Password (part 2): %s", pt2_solution);
+    writefln("Invalid ID sum (part 2): %s", pt2_solution);
     writeln("Elapsed Time:");
     writefln("    Parsing: %s ms", float((pt1_start - start_time).total!"usecs") / 1000);
     writefln("    Part 1: %s ms", float((pt2_start - pt1_start).total!"usecs") / 1000);
