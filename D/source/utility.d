@@ -102,11 +102,11 @@ public:
 
 // Acts similar to % operator, but with handling for negative lhs values to continue wrap-around behavior.
 T wrap(T)(T lhs, T rhs)
+in (rhs > 0)  // rhs == 0 is of course division by zero; rhs < 0 is untested and I don't currently need it to work enough to figure out what SHOULD happen.
 {
-    // Saved attempt at doing this without a loop; appears to wrap properly at first but breaks when abs(lhs) > rhs; need to check abs(lhs)==rhs
-    // if (lhs < 0) lhs = rhs + lhs;  // technically, rhs - abs(lhs), just simplified given lhs < 0
-    while (lhs < 0) lhs += rhs;
-    return lhs % rhs;
+    T result = lhs % rhs;
+    if (result < 0) result += rhs;
+    return result;
 }
 
 version(none)
