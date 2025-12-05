@@ -88,7 +88,6 @@ int64_t calculate_range_size(Range range)
     return range.max - range.min + 1;
 }
 
-// part 1 is more or less just the first iteration of part 2, so...
 int64_t part_2(Input input)
 {
     input.fresh.sort!((a, b) => (a.min < b.min));
@@ -103,10 +102,17 @@ int64_t part_2(Input input)
         }
         else
         {
+            // range falls entirely outside the current merged range, so we now calculate the size
+            // of the old range, and set up the next iteration of the loop so we don't miss the range
+            // we just found.
             fresh_ids += merged_range.calculate_range_size;
             merged_range = range;
         }
     }
+    // We will consistently fail to calculate the last range within the loop,
+    // since that step triggers when it hits a range that falls entirely outside the current one,
+    // and the calculation only includes the previous range in that case -- so we need to clean up
+    // whatever's left.
     fresh_ids += merged_range.calculate_range_size;
     return fresh_ids;
 }
