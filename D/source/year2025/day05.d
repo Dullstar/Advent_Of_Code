@@ -9,10 +9,8 @@ import std.exception;
 import std.stdint;
 import std.algorithm;
 import std.array;
-import std.typecons;
 
 import input;
-import utility;
 
 struct Range
 {
