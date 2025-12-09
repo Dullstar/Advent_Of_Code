@@ -67,16 +67,16 @@ Solution solve(DistRecord[] dists, Point[] input, size_t pt1_boundary)
     box_circuits.length = input.length;
     box_circuits[] = 0;
     auto circuits = Dict!(int, size_t[]).init;
-    int circuit_id = 1;
-    int unmapped_boxes = input.length.to!int;
     
-    void connect_box(size_t box, int circuit)
+    // Each circuit needs a unique id. Also, each isolated box is its own circuit.
+    // So for simplicity we'll just set a circuit's ID to be the index of the single box it started with.
+    // But as long as each circuit ID is unique, it doesn't actually matter what they are.
+    for (int circuit_id = 0; circuit_id < input.length.to!int; ++circuit_id)
     {
-        box_circuits[box] = circuit;
-        circuits.data[circuit] ~= box;
-        unmapped_boxes -= 1;
+        alias box_id = circuit_id;  // just for clarity
+        box_circuits[box_id] = circuit_id;
+        circuits.data[circuit_id] ~= box_id;
     }
-
     // Takes two circuits with different ids and makes one circuit with one id.
     // The id that's kept vs. the id that's discarded is an arbitrary choice,
     // and this behavior is not intended to be relied on.
@@ -94,26 +94,7 @@ Solution solve(DistRecord[] dists, Point[] input, size_t pt1_boundary)
     // because we need to use this twice
     void loop_body(DistRecord pair)
     {
-        // Neither box has been assigned to a circuit.
-        if (!box_circuits[pair.first] && !box_circuits[pair.second])
-        {
-            // Creates a new circuit with these two boxes.
-            // This consumes the current id, so it will be incremented.
-            connect_box(pair.first, circuit_id);
-            connect_box(pair.second, circuit_id);
-            circuit_id += 1;
-        }
-        // Only one of the boxes has been assigned to a circuit.
-        else if (box_circuits[pair.first] && !box_circuits[pair.second])
-        {
-            connect_box(pair.second, box_circuits[pair.first]);
-        }
-        else if (!box_circuits[pair.first] && box_circuits[pair.second])
-        {
-            connect_box(pair.first, box_circuits[pair.second]);
-        }
-        // The boxes are assigned to different circuits.
-        else if (box_circuits[pair.first] != box_circuits[pair.second])
+        if (box_circuits[pair.first] != box_circuits[pair.second])
         {
             merge_circuits(box_circuits[pair.first], box_circuits[pair.second]);
         }
@@ -132,8 +113,7 @@ Solution solve(DistRecord[] dists, Point[] input, size_t pt1_boundary)
     foreach (pair; dists[pt1_boundary..$])
     {
         loop_body(pair);
-        assert(unmapped_boxes >= 0);
-        if (unmapped_boxes == 0 && circuits.data.length == 1)
+        if (circuits.data.length == 1)
         {
             result.pt2_solution = input[pair.first].x * input[pair.second].x;
             break;
