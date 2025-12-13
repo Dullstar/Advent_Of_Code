@@ -2,6 +2,7 @@ module run_day;
 
 import std.format;
 import std.stdio;
+import std.file;
 
 import year2021;
 import year2022;
@@ -44,30 +45,38 @@ struct Day
 
 bool run_day(Day day)
 {
-    writefln("%d Day %d", day.year, day.day);
-    bool res = false;
-    switch (day.year)
-    {
-    case 2021:
-        res = run_day_2021(day.day);
-        break;
-	case 2022:
-		res = run_day_2022(day.day);
-		break;
-	case 2023:
-		res = run_day_2023(day.day);
-		break;
-	case 2024:
-		res = run_day_2024(day.day);
-		break;
-	case 2025:
-		res = run_day_2025(day.day);
-		break;
-    default: break;
-    }
-    if (!res) {
-        writeln("Not implemented yet.");
-    }
-    writeln();
-    return res;
+	try
+	{
+		writefln("%d Day %d", day.year, day.day);
+		bool res = false;
+		switch (day.year)
+		{
+		case 2021:
+			res = run_day_2021(day.day);
+			break;
+		case 2022:
+			res = run_day_2022(day.day);
+			break;
+		case 2023:
+			res = run_day_2023(day.day);
+			break;
+		case 2024:
+			res = run_day_2024(day.day);
+			break;
+		case 2025:
+			res = run_day_2025(day.day);
+			break;
+		default: break;
+		}
+		if (!res) {
+			writeln("Not implemented yet.");
+		}
+		writeln();
+		return res;
+	}
+	catch (FileException e)
+	{
+		stderr.writeln(e.msg);
+		return false;
+	}
 }
