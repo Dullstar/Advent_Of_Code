@@ -63,19 +63,23 @@ string get_input(int year, int day)
 
 string get_input_path(int year, int day)
 {
-    return format("%04d/day%02d.txt", year, day);
+    return format!("%04d/day%02d.txt")(year, day);
 }
 
-// This is fairly limited for now. Looks for a test_input.txt file
-// in the same directory as the executable
-string get_test_input()
+// Added to handle cases where there are multiple test inputs provided.
+// It's an overload instead of a default since usually this functionality isn't needed.
+// Usually, these correspond to Part 1 and Part 2, but not necessarily.
+// For test_no=1, the normal filename is retained, since we won't see that Part 2
+// has a new example until after completing Part 1.
+string get_input(int year, int day, uint test_no)
 {
-    assert(0, "I think this is no longer in use.");
-    return readText(get_test_input_path());
+    assert(test_no >= 1, "test_no must be a positive nonzero number.");
+    return readText(get_input_path(year, day, test_no));
 }
 
-string get_test_input_path()
+string get_input_path(int year, int day, uint test_no)
 {
-    assert(0, "I think this is no longer in use.");
-    return chainPath(thisExePath(), "test_input.txt").to!string;
+    assert(test_no >= 1, "test_no must be a positive nonzero number.");
+    if (!_is_test || test_no == 1) return get_input_path(year, day);
+    return format!("%04d/day%02d-%d.txt")(year, day, test_no);
 }
